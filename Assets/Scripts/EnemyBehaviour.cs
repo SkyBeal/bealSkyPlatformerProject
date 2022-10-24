@@ -4,15 +4,5 @@ using UnityEngine;
 
 public class EnemyBehaviour : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //yeah it'll move at any point now
 }
