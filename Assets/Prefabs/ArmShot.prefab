@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2871818267224485015}
   m_Layer: 6
   m_Name: ArmShot
-  m_TagString: Untagged
+  m_TagString: Shot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,9 +99,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ba80991681300441bf9bbe2b654812d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 15
+  Speed: 10
+  ReturnSpeed: 0.5
   ARB: {fileID: -8523204397102605350}
-  Player: {fileID: 1225574396999403324, guid: 28aeb6682a5ebf44aa920e12a5da8379, type: 3}
+  Player: {fileID: 2594274173467975623, guid: c93dd9c1ee865eb43a991ca121f6bd5f, type: 3}
+  GoingBack: 0
+  StartingPosition: {x: 0, y: 0}
+  MaxDistance: 25
+  Enemy: {fileID: 5277773797397041358, guid: 8903f2a92c61d7b41aaa2bd911e36735, type: 3}
+  MyState: 1
 --- !u!50 &-8523204397102605350
 Rigidbody2D:
   serializedVersion: 4

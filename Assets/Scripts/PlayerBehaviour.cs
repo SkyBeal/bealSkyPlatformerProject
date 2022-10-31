@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -15,6 +16,13 @@ public class PlayerBehaviour : MonoBehaviour
     public bool ArmOut = false; 
     public Transform FirePoint;
     public GameObject ArmShot;
+    public float XMove;
+    public ArmMovement RightArm;
+    public float ReturnSpeed;
+    public GameObject LoseScreen;
+    public AudioClip DefeatSound;
+    public GameObject WinScreen;
+    public AudioClip NextLevelSound;
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
@@ -30,6 +38,29 @@ public class PlayerBehaviour : MonoBehaviour
             {
             Debug.Log("wahoo new level time");
             }
+            if (collision.transform.tag == "Door1")
+            {
+            SceneManager.LoadScene(2);
+            AudioSource.PlayClipAtPoint(NextLevelSound, Camera.main.transform.position);
+             }
+            if (collision.transform.tag == "Door2")
+            {
+            SceneManager.LoadScene(3);
+            AudioSource.PlayClipAtPoint(NextLevelSound, Camera.main.transform.position);
+              }
+            if (collision.transform.tag == "Door3")
+            {
+            WinGame();
+            AudioSource.PlayClipAtPoint(NextLevelSound, Camera.main.transform.position);
+              }
+            if (collision.transform.tag == "Enemy2")
+            {
+            KillPlayer();
+            }
+            if (collision.transform.tag == "Enemy3")
+            {
+            KillPlayer();
+            }
     }
     public void OnCollisionExit2D(Collision2D collision)
     {
@@ -40,22 +71,10 @@ public class PlayerBehaviour : MonoBehaviour
     }
     void Update()
     {
-        //move left
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            float xMove = Input.GetAxis("Horizontal");
-            Vector3 newPos = transform.position;
-            newPos.x += xMove * Speed * Time.deltaTime;
-            transform.position = newPos;
-        }
-        //move right
-        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-        {
-            float xMove = Input.GetAxis("Horizontal");
-            Vector3 newPos = transform.position;
-            newPos.x += xMove * Speed * Time.deltaTime;
-            transform.position = newPos;
-        }
+        //move
+        XMove = Input.GetAxis("Horizontal");
+        Vector3 newPos = transform.position;
+        
         //jump
         bool shouldJump = (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow));
         if (shouldJump && OnGround)
@@ -63,15 +82,33 @@ public class PlayerBehaviour : MonoBehaviour
             RB2D.velocity = Vector2.zero;
             RB2D.AddForce(jumpForce);
         }
+
+        //change arm direction
         CheckDirection();
         ARB.velocity = new Vector2(50f, 0f) * gameObject.transform.localScale.x;
 
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Shoot();
+            if (RightArm.MyState == ArmMovement.ArmState.ReturnHome)
+            {
+                RightArm.transform.position = gameObject.transform.position;
+                RightArm.gameObject.SetActive(true);
+                RightArm.StartThrow();
+            }
+            if (RightArm.MyState ==  ArmMovement.ArmState.BeingThrown)
+            {
+
+            }
+
         }
     }
+
+    private void FixedUpdate()
+    {
+        RB2D.velocity = new Vector2(XMove * Speed * Time.deltaTime, RB2D.velocity.y);
+    }
+
     public void CheckDirection()
     {
         InputDirection = Input.GetAxisRaw("Horizontal");
@@ -87,11 +124,15 @@ public class PlayerBehaviour : MonoBehaviour
     }
     public void KillPlayer()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        AudioSource.PlayClipAtPoint(DefeatSound, Camera.main.transform.position);
+        LoseScreen.SetActive(true);
+        Destroy(gameObject);
     }
-    public void Shoot()
+    public void WinGame()
     {
-        Instantiate(ArmShot, FirePoint.position, Quaternion.identity);
+        Destroy(gameObject);
+        WinScreen.SetActive(true);
     }
+   
 }
     
