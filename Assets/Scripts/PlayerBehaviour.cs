@@ -23,12 +23,16 @@ public class PlayerBehaviour : MonoBehaviour
     public AudioClip DefeatSound;
     public GameObject WinScreen;
     public AudioClip NextLevelSound;
+    public float GoingRight;
+    public bool Moving;
+    public bool Jumping;
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
             if (collision.transform.tag == "Ground")
             {
                 OnGround = true;
+                Jumping = false;
             } 
             if (collision.transform.tag == "Enemy")
             {
@@ -36,7 +40,7 @@ public class PlayerBehaviour : MonoBehaviour
             }
             if (collision.transform.tag == "Boss")
             {
-            Debug.Log("wahoo new level time");
+            KillPlayer();
             }
             if (collision.transform.tag == "Door1")
             {
@@ -74,31 +78,44 @@ public class PlayerBehaviour : MonoBehaviour
         //move
         XMove = Input.GetAxis("Horizontal");
         Vector3 newPos = transform.position;
-        
-        //jump
+
+        //i'm so tired and this is the only way i can think to do this rn - bools for animations
+        if (!Input.GetKeyDown(KeyCode.W) || !Input.GetKeyDown(KeyCode.A) || !Input.GetKeyDown(KeyCode.D))
+        {
+            Moving = false;
+        }
+        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) && !Input.GetKeyDown(KeyCode.W))
+        {
+            Moving = true;
+        }
+
+            //jump
         bool shouldJump = (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow));
         if (shouldJump && OnGround)
         {
             RB2D.velocity = Vector2.zero;
             RB2D.AddForce(jumpForce);
+            Jumping = true;
         }
 
         //change arm direction
         CheckDirection();
-        ARB.velocity = new Vector2(50f, 0f) * gameObject.transform.localScale.x;
+       // ARB.velocity = new Vector2(50f, 0f) * gameObject.transform.localScale.x;
 
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (RightArm.MyState == ArmMovement.ArmState.ReturnHome)
-            {
-                RightArm.transform.position = gameObject.transform.position;
-                RightArm.gameObject.SetActive(true);
-                RightArm.StartThrow();
-            }
-            if (RightArm.MyState ==  ArmMovement.ArmState.BeingThrown)
-            {
 
+            if (RightArm.MyState==ArmMovement.ArmState.BeingThrown|| RightArm.MyState == ArmMovement.ArmState.Still)
+            {
+                RightArm.MyState = ArmMovement.ArmState.ReturnHome;
+            }
+            else if (RightArm.MyState == ArmMovement.ArmState.Home|| RightArm.MyState == ArmMovement.ArmState.ReturnHome)
+            {
+                RightArm.MyState = ArmMovement.ArmState.BeingThrown;
+                RightArm.gameObject.SetActive(true);
+                RightArm.transform.position = gameObject.transform.position;
+                RightArm.StartThrow();
             }
 
         }
@@ -115,11 +132,13 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (InputDirection > 0)
         {
-            gameObject.transform.localScale = new Vector3 (-0.6331808f, 0.6258141f, 1);
+            gameObject.transform.localScale = new Vector3 (5f, 5f, 1);
+            GoingRight = 1;
         }
         else if (InputDirection < 0)
         {
-            gameObject.transform.localScale = new Vector3 (0.6331808f, 0.6258141f, 1);
+            gameObject.transform.localScale = new Vector3 (-5f, 5, 1);
+            GoingRight = -1;
         }
     }
     public void KillPlayer()

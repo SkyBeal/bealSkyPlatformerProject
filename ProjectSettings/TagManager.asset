@@ -5,13 +5,14 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
-  - Enemy
   - Boss
   - Shot
   - Door1
   - Door2
-  - Enemy2
   - Door3
+  - PlatformTrigger
+  - Enemy2
+  - Enemy
   - Enemy3
   layers:
   - Default
@@ -21,8 +22,8 @@ TagManager:
   - Water
   - UI
   - Arm
-  - 
-  - 
+  - Player
+  - Enemy
   - 
   - 
   - 

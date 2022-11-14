@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8363765631446279226
 Transform:
   m_ObjectHideFlags: 0
@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6551006426735378128}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.47, y: -1.64, z: 0}
+  m_LocalPosition: {x: -12.159261, y: 129.01633, z: 0}
   m_LocalScale: {x: 1.3804245, y: 0.47682744, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -104,9 +104,11 @@ MonoBehaviour:
   ARB: {fileID: -8523204397102605350}
   Player: {fileID: 2594274173467975623, guid: c93dd9c1ee865eb43a991ca121f6bd5f, type: 3}
   GoingBack: 0
-  StartingPosition: {x: 0, y: 0}
+  StartingPosition: {x: -12.159261, y: 129.01633}
   MaxDistance: 25
   Enemy: {fileID: 5277773797397041358, guid: 8903f2a92c61d7b41aaa2bd911e36735, type: 3}
+  Health: 3
+  Damage: 1
   MyState: 1
 --- !u!50 &-8523204397102605350
 Rigidbody2D:
@@ -139,7 +141,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

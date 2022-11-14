@@ -7,20 +7,28 @@ public class ArmMovement : MonoBehaviour
     public float Speed = 15f;
     public float ReturnSpeed = 5f;
     public Rigidbody2D ARB;
-    public GameObject Player;
+    public PlayerBehaviour Player;
     public bool GoingBack = false;
     public Vector2 StartingPosition;
     public float MaxDistance = 25;
     public GameObject Enemy;
+    public float Health;
+    public float Damage = 1;
+    public Vector2 ShootForce = new Vector2(20, 0);
+    public float InputDirection;
+    public float GoingRight;
 
+    public Vector2 EndPoint;
     public void Start()
     {
-         Player = GameObject.FindGameObjectWithTag("Player");
+
     }
     public enum ArmState
     {
         BeingThrown, 
         ReturnHome, 
+        Still,
+        Home,
     }
     public ArmState MyState; 
 
@@ -30,55 +38,42 @@ public class ArmMovement : MonoBehaviour
         //off before thrown
         if (MyState == ArmState.ReturnHome)
         {
-            transform.position = Vector2.MoveTowards (transform.position, Player.transform.position, ReturnSpeed);
-            //GoingBack = false;
+            ARB.velocity = new Vector2(0f, 0f);
+            transform.position = Vector2.MoveTowards(transform.position, Player.transform.position, ReturnSpeed);
+            GoingBack = false;
         }
         //shoot outward and recall to player
-        else if(MyState == ArmState.BeingThrown)
+        else if (MyState == ArmState.BeingThrown)
         {
-            if (Mathf.Abs(transform.position.x - StartingPosition.x) > MaxDistance)
-            {
-                ARB.velocity = new Vector2(0f, 0f);
-            }
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                transform.position = Vector2.MoveTowards (transform.position, Player.transform.position, ReturnSpeed);
-                GoingBack = true;
-                MyState = ArmState.ReturnHome;
-            }
-        }
-    }
+            //Throw until at end point
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            if(GoingBack)
-            {
-             gameObject.SetActive(false);
-             MyState = ArmState.ReturnHome;
-             GoingBack = false;
-            }
-        }
-        if (collision.gameObject.tag == "Enemy")
-        {
-            collision.gameObject.SetActive(false);
-        }
-        if (collision.gameObject.tag == "Enemy2")
-        {
-            collision.gameObject.SetActive(false);
-        }
-        if (collision.gameObject.tag == "Enemy3")
-        {
-            collision.gameObject.SetActive(false);
         }
     }
 
     public void StartThrow()
     {
         ARB = GetComponent<Rigidbody2D>();
-        ARB.velocity = new Vector2(-50f, 0f) * Player.gameObject.transform.localScale;
+        ARB.velocity = new Vector2(Speed, 0f) * Player.gameObject.transform.localScale;
         StartingPosition = ARB.position;
-        MyState = ArmState.BeingThrown; 
+        MyState = ArmState.BeingThrown;
+
+        EndPoint = StartingPosition + (ShootForce * Player.transform.localScale.x);
+        Debug.Log(EndPoint);
+    }
+
+    public void CheckDirection()
+    {
+        InputDirection = Input.GetAxisRaw("Horizontal");
+
+        if (InputDirection > 0)
+        {
+            gameObject.transform.localScale = new Vector3(-1f, 1f, 1);
+            GoingRight = 1;
+        }
+        else if (InputDirection < 0)
+        {
+            gameObject.transform.localScale = new Vector3(1f, 1f, 1);
+            GoingRight = -1;
+        }
     }
 }
