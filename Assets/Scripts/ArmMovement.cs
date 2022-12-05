@@ -58,7 +58,6 @@ public class ArmMovement : MonoBehaviour
         MyState = ArmState.BeingThrown;
 
         EndPoint = StartingPosition + (ShootForce * Player.transform.localScale.x);
-        Debug.Log(EndPoint);
     }
 
     public void CheckDirection()

@@ -23,9 +23,19 @@ public class PlayerBehaviour : MonoBehaviour
     public AudioClip DefeatSound;
     public GameObject WinScreen;
     public AudioClip NextLevelSound;
+    public AudioClip WhooshSound;
     public float GoingRight;
     public bool Moving;
     public bool Jumping;
+    public static bool IsPlayerDead = false;
+    public Animator M_Animator;
+    public GameObject BGMusic;
+
+    public void Start()
+    {
+       M_Animator = gameObject.GetComponent<Animator>(); 
+    }
+    
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
@@ -100,7 +110,6 @@ public class PlayerBehaviour : MonoBehaviour
 
         //change arm direction
         CheckDirection();
-       // ARB.velocity = new Vector2(50f, 0f) * gameObject.transform.localScale.x;
 
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -116,6 +125,7 @@ public class PlayerBehaviour : MonoBehaviour
                 RightArm.gameObject.SetActive(true);
                 RightArm.transform.position = gameObject.transform.position;
                 RightArm.StartThrow();
+                AudioSource.PlayClipAtPoint(WhooshSound, Camera.main.transform.position);
             }
 
         }
@@ -132,12 +142,12 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (InputDirection > 0)
         {
-            gameObject.transform.localScale = new Vector3 (5f, 5f, 1);
+            gameObject.transform.localScale = new Vector3 (1.5f, 1.5f, 1);
             GoingRight = 1;
         }
         else if (InputDirection < 0)
         {
-            gameObject.transform.localScale = new Vector3 (-5f, 5, 1);
+            gameObject.transform.localScale = new Vector3 (-1.5f, 1.5f, 1);
             GoingRight = -1;
         }
     }
@@ -146,11 +156,13 @@ public class PlayerBehaviour : MonoBehaviour
         AudioSource.PlayClipAtPoint(DefeatSound, Camera.main.transform.position);
         LoseScreen.SetActive(true);
         Destroy(gameObject);
+        IsPlayerDead = true;
     }
     public void WinGame()
     {
         Destroy(gameObject);
         WinScreen.SetActive(true);
+        Destroy(BGMusic);
     }
    
 }

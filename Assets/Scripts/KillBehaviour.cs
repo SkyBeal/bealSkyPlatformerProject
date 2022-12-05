@@ -15,7 +15,6 @@ public class KillBehaviour : MonoBehaviour
         {
             if (RightArm.MyState==ArmMovement.ArmState.ReturnHome)
             {
-                Debug.Log("home");
                 RightArm.MyState = ArmMovement.ArmState.Home;
                 RightArm.gameObject.SetActive(false);
             }
@@ -24,20 +23,13 @@ public class KillBehaviour : MonoBehaviour
         {
             collision.gameObject.SetActive(false);
             AudioSource.PlayClipAtPoint(HurtSound, Camera.main.transform.position);
-            Debug.Log("i hate coding");
         }
         if (collision.gameObject.tag == "Enemy2")
         {
-            collision.gameObject.SetActive(false);
-            AudioSource.PlayClipAtPoint(HurtSound, Camera.main.transform.position);
-        }
-        if (collision.gameObject.tag == "Enemy3")
-        {
-            collision.gameObject.SetActive(false);
-            AudioSource.PlayClipAtPoint(HurtSound, Camera.main.transform.position);
         }
         if (collision.gameObject.tag == "Boss")
         {
+            AudioSource.PlayClipAtPoint(HurtSound, Camera.main.transform.position);
             Health -= Damage;
             if (Health <= 0)
             {
