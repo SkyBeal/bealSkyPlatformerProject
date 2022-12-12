@@ -9,8 +9,6 @@ public class PlayerBehaviour : MonoBehaviour
     public Rigidbody2D RB2D;
     public Vector2 jumpForce = new Vector2(0, 300);
     public bool OnGround;
-    public bool FaceLeft;
-    public bool FaceRight;
     public float InputDirection;
     public Rigidbody2D ARB;
     public bool ArmOut = false; 
@@ -26,14 +24,13 @@ public class PlayerBehaviour : MonoBehaviour
     public AudioClip WhooshSound;
     public float GoingRight;
     public bool Moving;
-    public bool Jumping;
-    public static bool IsPlayerDead = false;
-    public Animator M_Animator;
+    public static bool IsPlayerDead;
+    public Animator GuyAnimator;
     public GameObject BGMusic;
 
     public void Start()
     {
-       M_Animator = gameObject.GetComponent<Animator>(); 
+      GuyAnimator = gameObject.GetComponent<Animator>(); 
     }
     
 
@@ -42,7 +39,6 @@ public class PlayerBehaviour : MonoBehaviour
             if (collision.transform.tag == "Ground")
             {
                 OnGround = true;
-                Jumping = false;
             } 
             if (collision.transform.tag == "Enemy")
             {
@@ -89,30 +85,29 @@ public class PlayerBehaviour : MonoBehaviour
         XMove = Input.GetAxis("Horizontal");
         Vector3 newPos = transform.position;
 
-        //i'm so tired and this is the only way i can think to do this rn - bools for animations
-        if (!Input.GetKeyDown(KeyCode.W) || !Input.GetKeyDown(KeyCode.A) || !Input.GetKeyDown(KeyCode.D))
+        //bools for animation
+        if ((!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow)) || IsPlayerDead)
         {
-            Moving = false;
+            GuyAnimator.SetBool("Moving", false);
         }
-        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) && !Input.GetKeyDown(KeyCode.W))
+        else if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && !IsPlayerDead)
         {
-            Moving = true;
+            GuyAnimator.SetBool("Moving", true);
         }
 
             //jump
-        bool shouldJump = (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow));
+        bool shouldJump = (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) && IsPlayerDead == false);
         if (shouldJump && OnGround)
         {
             RB2D.velocity = Vector2.zero;
             RB2D.AddForce(jumpForce);
-            Jumping = true;
         }
 
         //change arm direction
         CheckDirection();
 
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && IsPlayerDead == false)
         {
 
             if (RightArm.MyState==ArmMovement.ArmState.BeingThrown|| RightArm.MyState == ArmMovement.ArmState.Still)
@@ -155,12 +150,13 @@ public class PlayerBehaviour : MonoBehaviour
     {
         AudioSource.PlayClipAtPoint(DefeatSound, Camera.main.transform.position);
         LoseScreen.SetActive(true);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
         IsPlayerDead = true;
     }
     public void WinGame()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        IsPlayerDead = true;
         WinScreen.SetActive(true);
         Destroy(BGMusic);
     }

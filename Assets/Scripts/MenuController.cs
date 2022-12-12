@@ -13,6 +13,7 @@ public class MenuController : MonoBehaviour
     {
         SceneManager.LoadScene(1);
         LoseScreen.SetActive(false);
+        PlayerBehaviour.IsPlayerDead = false;
     }
     public void QuitGame()
     {
@@ -26,9 +27,11 @@ public class MenuController : MonoBehaviour
     public void Dead2()
     {
         SceneManager.LoadScene(2);
+        PlayerBehaviour.IsPlayerDead = false;
     }
     public void Dead3()
     {
         SceneManager.LoadScene(3);
+        PlayerBehaviour.IsPlayerDead = false;
     }
 }

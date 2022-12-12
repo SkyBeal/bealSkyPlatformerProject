@@ -132,9 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 3
-  Positions:
-  - {x: -38.996, y: -10.596, z: 0}
-  - {x: -34.45, y: -10.596, z: 0}
+  Positions: []
 --- !u!95 &3094438760183021156
 Animator:
   serializedVersion: 4
